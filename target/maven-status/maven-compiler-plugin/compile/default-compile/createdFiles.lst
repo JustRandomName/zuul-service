@@ -1,0 +1,4 @@
+zuul/filter/PreRouteFilter.class
+zuul/service/SecurityService.class
+zuul/ZuulConfig.class
+zuul/service/SecurityClient.class
