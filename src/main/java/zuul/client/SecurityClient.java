@@ -17,11 +17,11 @@ import java.util.List;
 public interface SecurityClient {
 
     @RequestMapping(value = "/isValid", method = POST)
-    boolean isValid(String token);
+    boolean isValid(@RequestHeader("Authorization") String token, String tokena);
 
 
     @RequestMapping(value = "/isAdmin", method = POST)
-    boolean isAdmin(String token);
+    boolean isAdmin(@RequestHeader("Authorization") String token, String tokena);
 
     @RequestMapping(value = "/getRoles", method = POST)
     List getRoles(@RequestHeader("Authorization") String token, String tokena);

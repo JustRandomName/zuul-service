@@ -1,5 +1,7 @@
 package zuul.service;
 
+import static model.enums.UserRoles.ROLE_ADMIN;
+import static model.enums.UserRoles.ROLE_USER;
 import static org.apache.logging.log4j.util.Strings.isNotBlank;
 
 import com.netflix.zuul.context.RequestContext;
@@ -22,8 +24,6 @@ public class SecurityService {
     private static final String AUTH_PATH = "/auth";
     private static final String MAIN_PATH = "/user";
     private static final String ADMIN_PATH = "/admin";
-    private static final String ROLE_USER = "ROLE_USER";
-    private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     @Autowired
     public SecurityService(final SecurityClient securityClient) {
@@ -48,23 +48,23 @@ public class SecurityService {
     private boolean isMainRequest(final String header, final RequestContext ctx) {
         return isNotBlank(header)
                 && ctx.getRequest().getServletPath().startsWith(MAIN_PATH)
-                && getRoles(header).contains(ROLE_USER)
+                && getRoles(header).contains(ROLE_USER.value)
                 && isValid(header);
     }
 
     private boolean isAdminRequest(final String header, final RequestContext ctx) {
         return isNotBlank(header)
                 && ctx.getRequest().getServletPath().contains(ADMIN_PATH)
-                && getRoles(header).contains(ROLE_ADMIN)
+                && getRoles(header).contains(ROLE_ADMIN.value)
                 && isAdmin(header);
     }
 
     private boolean isValid(final String token) {
-        return securityClient.isValid(token);
+        return securityClient.isValid(token, token);
     }
 
     private boolean isAdmin(final String token) {
-        return securityClient.isAdmin(token);
+        return securityClient.isAdmin(token, token);
     }
 
     private List getRoles(final String token) {
