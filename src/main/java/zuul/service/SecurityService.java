@@ -46,7 +46,6 @@ public class SecurityService {
 
     private boolean isMainRequest(final String header, final RequestContext ctx) {
         return isNotBlank(header)
-                && ctx.getRequest().getServletPath().startsWith(MAIN_PATH)
                 && getRoles(header).contains(ROLE_USER)
                 && isValid(header);
     }
