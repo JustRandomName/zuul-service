@@ -20,7 +20,6 @@ public class SecurityService {
     private final SecurityClient securityClient;
 
     private static final String AUTH_PATH = "/auth";
-    private static final String MAIN_PATH = "/user";
     private static final String ADMIN_PATH = "/admin";
     private static final String ROLE_USER = "ROLE_USER";
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -35,34 +34,30 @@ public class SecurityService {
      * @param header token for authenticated
      */
     public boolean isRequestValid(final String header, final RequestContext ctx) {
-        return isAuthRequest(header, ctx)
-                || isMainRequest(header, ctx)
+        return isAuthRequest(ctx)
+                || isMainRequest(header)
                 || isAdminRequest(header, ctx);
     }
 
-    private boolean isAuthRequest(final String header, final RequestContext ctx) {
+    private boolean isAuthRequest(final RequestContext ctx) {
         return ctx.getRequest().getServletPath().contains(AUTH_PATH);
     }
 
-    private boolean isMainRequest(final String header, final RequestContext ctx) {
+    private boolean isMainRequest(final String header) {
         return isNotBlank(header)
-                && getRoles(header).contains(ROLE_USER)
+                && (getRoles(header).contains(ROLE_USER)
+                || getRoles(header).contains(ROLE_ADMIN))
                 && isValid(header);
     }
 
     private boolean isAdminRequest(final String header, final RequestContext ctx) {
         return isNotBlank(header)
                 && ctx.getRequest().getServletPath().contains(ADMIN_PATH)
-                && getRoles(header).contains(ROLE_ADMIN)
-                && isAdmin(header);
+                && getRoles(header).contains(ROLE_ADMIN);
     }
 
     private boolean isValid(final String token) {
         return securityClient.isValid(token, token);
-    }
-
-    private boolean isAdmin(final String token) {
-        return securityClient.isAdmin(token, token);
     }
 
     private List getRoles(final String token) {
