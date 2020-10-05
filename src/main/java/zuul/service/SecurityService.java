@@ -21,6 +21,8 @@ public class SecurityService {
 
     private static final String AUTH_PATH = "/auth";
     private static final String ADMIN_PATH = "/admin";
+    private static final String REGISTRATION = "/registration";
+    private static final String CONFIRM = "/confirm";
     private static final String ROLE_USER = "ROLE_USER";
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
@@ -35,12 +37,18 @@ public class SecurityService {
      */
     public boolean isRequestValid(final String header, final RequestContext ctx) {
         return isAuthRequest(ctx)
+                || isRegistrationRequest(ctx)
                 || isMainRequest(header)
                 || isAdminRequest(header, ctx);
     }
 
     private boolean isAuthRequest(final RequestContext ctx) {
         return ctx.getRequest().getServletPath().contains(AUTH_PATH);
+    }
+
+    private boolean isRegistrationRequest(final RequestContext ctx) {
+        return ctx.getRequest().getServletPath().contains(REGISTRATION)
+                || ctx.getRequest().getServletPath().contains(CONFIRM);
     }
 
     private boolean isMainRequest(final String header) {

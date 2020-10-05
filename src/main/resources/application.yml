@@ -23,3 +23,9 @@ zuul:
     security:
       path: /auth/**
       url: http://localhost:9999/auth
+    registration:
+      path: /registration/**
+      url: http://localhost:9999/registration
+    confirm:
+      path: /confirm/**
+      url: http://localhost:9999/confirm
